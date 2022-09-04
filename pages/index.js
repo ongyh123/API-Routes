@@ -26,6 +26,13 @@ function HomePage() {
       .then((data) => console.log(data)); //fetch return a promise
   }
 
+  // to GET the data when "Load Feedback" button is clicked
+  function loadFeedbackHandler() {
+    fetch('/api/feedback')
+      .then((response) => response.json())
+      .then((data) => console.log(data));
+  }
+
   return (
     <div>
       <h1>The Home Page</h1>
@@ -40,6 +47,8 @@ function HomePage() {
         </div>
         <button>Send Feedback</button>
       </form>
+      <hr />
+      <button onClick={loadFeedbackHandler}>Load Feedback</button>
     </div>
   );
 }
