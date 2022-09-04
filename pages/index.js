@@ -1,9 +1,11 @@
 // dont add JS to this frontend component to talk to the database
 // expose the database in the frontend code, highly insecure, expose to the visitors
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 function HomePage() {
+  const [feedbackItems, setFeedbackItems] = useState([]);
+
   const emailInputRef = useRef();
   const feedbackInputRef = useRef();
 
@@ -30,7 +32,9 @@ function HomePage() {
   function loadFeedbackHandler() {
     fetch('/api/feedback')
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        setFeedbackItems(data.feedback);
+      });
   }
 
   return (
@@ -49,6 +53,11 @@ function HomePage() {
       </form>
       <hr />
       <button onClick={loadFeedbackHandler}>Load Feedback</button>
+      <ul>
+        {feedbackItems.map((item) => (
+          <li key={item.id}>{item.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }
