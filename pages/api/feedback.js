@@ -9,6 +9,17 @@
 import fs from 'fs'; // nodeJS feature
 import path from 'path'; // nodeJS feature
 
+//cwd = current working directory, store the data in data/feedback.json
+export function buildFeedbackPath() {
+  return path.join(process.cwd(), 'data', 'feedback.json');
+}
+
+export function extractFeedback(filePath) {
+  const fileData = fs.readFileSync(filePath);
+  const data = JSON.parse(fileData); // convert into a Javascript Object
+  return data;
+}
+
 function handler(req, res) {
   if (req.method === 'POST') {
     const email = req.body.email;
@@ -20,14 +31,15 @@ function handler(req, res) {
       text: feedbackText,
     };
     // store that in a database or in a file
-    const filePath = path.join(process.cwd(), 'data', 'feedback.json'); //cwd = current working directory, store the data in data/feedback.json
-    const fileData = fs.readFileSync(filePath);
-    const data = JSON.parse(fileData); // convert into a Javascript Object
+    const filePath = buildFeedbackPath();
+    const data = extractFeedback(filePath);
     data.push(newFeedback); // push into the array in the data/feedback.json file
     fs.writeFileSync(filePath, JSON.stringify(data)); //  covert the data back to JSON then write it back to the disk
     res.status(201).json({ message: 'Success!', feedback: newFeedback }); // send a response in json format, 201 = added data succesfully
   } else {
-    res.status(200).json({ message: 'This works!' });
+    const filePath = buildFeedbackPath();
+    const data = extractFeedback(filePath);
+    res.status(200).json({ feedback: data }); // if we type in the url, /api/feedback, we will get this message, cause it is GET not POST
   }
 }
 
