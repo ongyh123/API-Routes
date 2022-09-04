@@ -1,14 +1,14 @@
 import { Fragment } from 'react';
 
 import { useState } from 'react';
-import { buildFeedbackPath, extractFeedback } from '../api/feedback';
+import { buildFeedbackPath, extractFeedback } from '../api/feedback/index';
 
 function FeedbackPage(props) {
   const [feedbackData, setFeedbackData] = useState();
 
   function loadFeedbackHandler(id) {
-    // <alternatively> fetch('/api/' + id);
-    fetch(`/api/${id}`)
+    // <alternatively> fetch('/api/feedback/' + id);
+    fetch(`/api/feedback/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setFeedbackData(data.feedback); // data.feedback, because we wanna access the property in [feedbackId] with the name feedback that hold the selectedFeedback
