@@ -1,12 +1,34 @@
+import { Fragment } from 'react';
+
+import { useState } from 'react';
 import { buildFeedbackPath, extractFeedback } from '../api/feedback';
 
 function FeedbackPage(props) {
+  const [feedbackData, setFeedbackData] = useState();
+
+  function loadFeedbackHandler(id) {
+    // <alternatively> fetch('/api/' + id);
+    fetch(`/api/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFeedbackData(data.feedback); // data.feedback, because we wanna access the property in [feedbackId] with the name feedback that hold the selectedFeedback
+      }); // /api/some-feednack-id
+  }
+
   return (
-    <ul>
-      {props.feedbackItems.map((item) => (
-        <li key={item.id}>{item.text}</li>
-      ))}
-    </ul>
+    <Fragment>
+      {feedbackData && <p>{feedbackData.email}</p>}
+      <ul>
+        {props.feedbackItems.map((item) => (
+          <li key={item.id}>
+            {item.text}
+            <button onClick={loadFeedbackHandler.bind(null, item.id)}>
+              Show Details
+            </button>
+          </li> // bind a build in JavaScript method to pre configure the function for future execution
+        ))}
+      </ul>
+    </Fragment>
   );
 }
 
